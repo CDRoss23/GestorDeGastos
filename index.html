@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Gastos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        main {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
+            flex: 1;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .form-group label {
+            margin-right: 10px;
+            flex: 1;
+        }
+        .form-group input {
+            flex: 2;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            margin-left: 10px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .balance {
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestión de Gastos</h1>
+    </header>
+    <main>
+        <div class="form-group">
+            <label for="income">Ingresos:</label>
+            <input type="number" id="income" placeholder="Ingrese el monto del ingreso">
+            <button class="btn" onclick="addIncome()">Agregar Ingreso</button>
+        </div>
+        <div class="form-group">
+            <label for="expenses">Gastos:</label>
+            <input type="number" id="expenses" placeholder="Ingrese el monto del gasto">
+            <button class="btn" onclick="addExpense()">Agregar Gasto</button>
+        </div>
+        <div class="balance">
+            <p>Saldo Total: <span id="totalBalance">1000.00</span></p>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ingreso</th>
+                        <th>Gasto</th>
+                        <th>Saldo Total</th>
+                    </tr>
+                </thead>
+                <tbody id="entries">
+                    <tr>
+                        <td>1000.00</td>
+                        <td>0.00</td>
+                        <td>1000.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 Gestión de Gastos. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+        let totalBalance = 1000.00;
+
+        function updateBalance() {
+            document.getElementById('totalBalance').innerText = totalBalance.toFixed(2);
+        }
+
+        function addIncome() {
+            const income = parseFloat(document.getElementById('income').value);
+
+            if (isNaN(income) || income <= 0) {
+                alert('Por favor, ingrese un monto válido.');
+                return;
+            }
+
+            totalBalance += income;
+
+            const table = document.getElementById('entries');
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+            <td>${income.toFixed(2)}</td>
+            <td>0.00</td>
+            <td>${totalBalance.toFixed(2)}</td>
+            `;
+
+            table.appendChild(row);
+
+            document.getElementById('income').value = '';
+            updateBalance();
+        }
+
+        function addExpense() {
+            const expenses = parseFloat(document.getElementById('expenses').value);
+
+            if (isNaN(expenses) || expenses <= 0) {
+                alert('Por favor, ingrese un monto válido.');
+                return;
+            }
+
+            if (expenses > totalBalance) {
+                alert('No puede realizar un gasto que exceda el saldo total.');
+                return;
+            }
+
+            totalBalance -= expenses;
+
+            const table = document.getElementById('entries');
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+            <td>0.00</td>
+            <td>${expenses.toFixed(2)}</td>
+            <td>${totalBalance.toFixed(2)}</td>
+            `;
+
+            table.appendChild(row);
+
+            document.getElementById('expenses').value = '';
+            updateBalance();
+        }
+    </script>
+</body>
+</html>
